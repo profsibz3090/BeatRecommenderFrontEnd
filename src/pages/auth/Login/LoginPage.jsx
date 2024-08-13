@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleInputChange = (event) => {
-    setloginData({ ...signInData, [event.target.name]: event.target.value });
+    setloginData({ ...loginData, [event.target.name]: event.target.value });
   };
 
   const handleProfessionChange = (value) => {
@@ -27,19 +27,21 @@ export default function LoginPage() {
       setIsLoading(true)
       const jsonString = JSON.stringify({
         username: signInData.username,
-        email: signInData.email,
         password: signInData.password,
-        profession: selectedProfession
       })
       
-      const res = await axios.post('https://beatrecommendersystembackend.onrender.com/users/', jsonString, {
+      const res = await axios.post('https://beatrecommendersystembackend.onrender.com/login', jsonString, {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
+      console.log(res.data);
+      console.log('passed thru');
+      
+      
      if (res.status == 200) {
-        toast.success('signup successful you can now login')
+        toast.success('login successful')
      } else {
       toast.error('something went wrong try again')
      }
@@ -74,19 +76,19 @@ export default function LoginPage() {
             <Label htmlFor="username">Username</Label>
             <Input id="username" name="username" placeholder="username" onChange={handleInputChange} required />
           </div>
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" name="email" type="email" defaultValue="user@example.com" onChange={handleInputChange} required />
-          </div>
+          </div> */}
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" onChange={handleInputChange} required />
+            <Input id="password" name="password" type="password" placeholder='password' onChange={handleInputChange} required />
           </div>
         </CardContent>
         <CardFooter className='flex-col'>
         <Button className="w-full" onClick={() => {
-            console.log({...signInData, profession:selectedProfession});
-            signUpUser()
+            console.log({...loginData, profession:selectedProfession});
+            loginUser()
           }}>{isLoading? <LoadingIndicator/> : 'Login'}</Button>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}

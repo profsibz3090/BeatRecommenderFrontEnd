@@ -67,7 +67,7 @@ export default function SignPage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" defaultValue="user@example.com" onChange={handleInputChange} required />
+            <Input id="email" name="email" type="email" placeholder="user@example.com" onChange={handleInputChange} required />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="profession">Profession</Label>
@@ -83,7 +83,7 @@ export default function SignPage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" onChange={handleInputChange} required />
+            <Input id="password" name="password" type="password" placeholder='password' onChange={handleInputChange} required />
           </div>
         </CardContent>
         <CardFooter className='flex-col'>
