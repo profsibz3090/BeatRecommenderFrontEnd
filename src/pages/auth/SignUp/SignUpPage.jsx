@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import axios from "axios"
 import LoadingIndicator from "../../../utilities/LoadingIndicator"
+import { Link } from "react-router-dom"
+import { toast } from "react-toastify"
 
 export default function SignPage() {
   const [signInData, setSignInData] = useState({});
@@ -36,14 +38,15 @@ export default function SignPage() {
           'Content-Type': 'application/json'
         }
       })
-
-     if (res.status == 200) {
-      const info = res.data
-      console.log(info);
+      // toast.success(`signup successful you can now login ${res.status}`)
+     if (res.status == 201) {
+        toast.success('signup successful you can now login')
+     } else {
+      toast.error('something went wrong try again')
      }
       
     } catch (error) {
-      console.log(error.message);
+      toast.error(error);
     }
     setIsLoading(false)
   }
@@ -81,11 +84,18 @@ export default function SignPage() {
             <Input id="password" name="password" type="password" onChange={handleInputChange} required />
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className='flex-col'>
         <Button className="w-full" onClick={() => {
             console.log({...signInData, profession:selectedProfession});
             signUpUser()
           }}>{isLoading? <LoadingIndicator/> : 'Sign Up'}</Button>
+          <div className="mt-4 text-center text-sm">
+            {/* Don&apos;t have an account?{" "} */}
+            Already have an account?{" "}
+            <Link href="#" className="underline">
+              Login
+            </Link>
+        </div>
         </CardFooter>
       </Card>
     </div>
