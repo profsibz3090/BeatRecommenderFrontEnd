@@ -8,23 +8,21 @@ import axios from "axios"
 import LoadingIndicator from "../../../utilities/LoadingIndicator"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
-import { useNavigate } from "react-router-dom"
 
-export default function SignPage() {
-  const [signInData, setSignInData] = useState({});
+export default function LoginPage() {
+  const [loginData, setloginData] = useState({});
   const [selectedProfession, setSelectedProfession] = useState('');
   const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
 
   const handleInputChange = (event) => {
-    setSignInData({ ...signInData, [event.target.name]: event.target.value });
+    setloginData({ ...signInData, [event.target.name]: event.target.value });
   };
 
   const handleProfessionChange = (value) => {
     setSelectedProfession(value);
   };
 
-  const signUpUser = async () => {
+  const loginUser = async () => {
     try {
       setIsLoading(true)
       const jsonString = JSON.stringify({
@@ -40,8 +38,7 @@ export default function SignPage() {
           'Content-Type': 'application/json'
         }
       })
-      // toast.success(`signup successful you can now login ${res.status}`)
-     if (res.status == 201) {
+     if (res.status == 200) {
         toast.success('signup successful you can now login')
      } else {
       toast.error('something went wrong try again')
@@ -57,19 +54,11 @@ export default function SignPage() {
     <div className="flex justify-center items-center min-h-screen">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
-          <CardDescription>Enter your information to create an account.</CardDescription>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>Enter your login details.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="username">Username</Label>
-            <Input id="username" name="username" placeholder="username" onChange={handleInputChange} required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" defaultValue="user@example.com" onChange={handleInputChange} required />
-          </div>
-          <div className="grid gap-2">
+        <div className="grid gap-2">
             <Label htmlFor="profession">Profession</Label>
             <Select onValueChange={handleProfessionChange}>
               <SelectTrigger id="profession">
@@ -82,6 +71,14 @@ export default function SignPage() {
             </Select>
           </div>
           <div className="grid gap-2">
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" name="username" placeholder="username" onChange={handleInputChange} required />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" name="email" type="email" defaultValue="user@example.com" onChange={handleInputChange} required />
+          </div>
+          <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
             <Input id="password" name="password" type="password" onChange={handleInputChange} required />
           </div>
@@ -90,12 +87,11 @@ export default function SignPage() {
         <Button className="w-full" onClick={() => {
             console.log({...signInData, profession:selectedProfession});
             signUpUser()
-          }}>{isLoading? <LoadingIndicator/> : 'Sign Up'}</Button>
+          }}>{isLoading? <LoadingIndicator/> : 'Login'}</Button>
           <div className="mt-4 text-center text-sm">
-            {/* Don&apos;t have an account?{" "} */}
-            Already have an account?{" "}
-            <Link to="/" className="underline">
-              Login
+            Don&apos;t have an account?{" "}
+            <Link to="/signup" className="underline">
+              SignUp
             </Link>
         </div>
         </CardFooter>
