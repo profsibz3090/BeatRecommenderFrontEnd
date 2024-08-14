@@ -25,20 +25,21 @@ export default function LoginPage() {
   const loginUser = async () => {
     try {
       setIsLoading(true)
-      const jsonString = JSON.stringify({
-        username: signInData.username,
-        password: signInData.password,
-      })
+      const data = new URLSearchParams();
+        data.append('grant_type', 'password');
+        data.append('username', loginData.username);
+        data.append('password', loginData.password);
+        // data.append('scope', '');
+        // data.append('client_id', 'string');
+        // data.append('client_secret', 'string');
       
-      const res = await axios.post('https://beatrecommendersystembackend.onrender.com/login', jsonString, {
+      const res = await axios.post('https://beatrecommendersystembackend.onrender.com/login', data, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
       console.log(res.data);
-      console.log('passed thru');
-      
       
      if (res.status == 200) {
         toast.success('login successful')
@@ -47,9 +48,16 @@ export default function LoginPage() {
      }
       
     } catch (error) {
-      toast.error(error);
+        if (error.response) {
+            toast.error(`Error: ${error.response.data.detail || 'Login failed'}`);
+        } else if (error.request) {
+            toast.error('No response received from server try again');
+        } else {
+            toast.error(`Error: ${error.message}`);
+        }
+    } finally {
+        setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   return (
@@ -60,18 +68,6 @@ export default function LoginPage() {
           <CardDescription>Enter your login details.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-            <Label htmlFor="profession">Profession</Label>
-            <Select onValueChange={handleProfessionChange}>
-              <SelectTrigger id="profession">
-                <SelectValue placeholder="Select profession" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Rapper">Rapper</SelectItem>
-                <SelectItem value="Producer">Producer</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="grid gap-2">
             <Label htmlFor="username">Username</Label>
             <Input id="username" name="username" placeholder="username" onChange={handleInputChange} required />
@@ -87,8 +83,11 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className='flex-col'>
         <Button className="w-full" onClick={() => {
-            console.log({...loginData, profession:selectedProfession});
-            loginUser()
+            if (loginData.username === null || loginData.password == null ){
+                toast.warning('please fill in all the fields on the form')
+            } else {
+                loginUser()
+            }
           }}>{isLoading? <LoadingIndicator/> : 'Login'}</Button>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}

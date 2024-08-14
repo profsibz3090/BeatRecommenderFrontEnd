@@ -40,7 +40,7 @@ export default function SignPage() {
           'Content-Type': 'application/json'
         }
       })
-      // toast.success(`signup successful you can now login ${res.status}`)
+
      if (res.status == 201) {
         toast.success('signup successful you can now login')
      } else {
@@ -48,9 +48,16 @@ export default function SignPage() {
      }
       
     } catch (error) {
-      toast.error(error);
-    }
-    setIsLoading(false)
+      if (error.response) {
+          toast.error(`Error: ${error.response.data.detail || 'Sign Up failed'}`);
+      } else if (error.request) {
+          toast.error('No response received from server try again');
+      } else {
+          toast.error(`Error: ${error.message}`);
+      }
+  } finally {
+      setIsLoading(false)
+  }
   }
 
   return (
@@ -88,8 +95,11 @@ export default function SignPage() {
         </CardContent>
         <CardFooter className='flex-col'>
         <Button className="w-full" onClick={() => {
-            console.log({...signInData, profession:selectedProfession});
-            signUpUser()
+           if (signInData.username === null || signInData.password == null || signInData.email == null || selectedProfession == ''){
+                toast.warning('please fill in all the fields on the form')
+            } else {
+                signUpUser()
+            }
           }}>{isLoading? <LoadingIndicator/> : 'Sign Up'}</Button>
           <div className="mt-4 text-center text-sm">
             {/* Don&apos;t have an account?{" "} */}
